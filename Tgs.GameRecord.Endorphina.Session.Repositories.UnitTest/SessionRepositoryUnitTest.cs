@@ -66,7 +66,6 @@ public class SessionRepositoryUnitTest
             .ConfigureAwait(false);
 
         Assert.NotNull(actual);
-        Assert.True(actual.Length >= 0);
     }
 
     [Fact]
