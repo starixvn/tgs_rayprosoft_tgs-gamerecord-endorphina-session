@@ -39,11 +39,7 @@ spec:
             - name: NODE_IP
               valueFrom:
                 fieldRef:
-                  fieldPath: status.hostIP
-            - name: POD_IP
-              valueFrom:
-               fieldRef:
-                fieldPath: status.podIP            
+                  fieldPath: status.hostIP                      
             - name: ConnectionStrings__Mongo
               valueFrom:
                 secretKeyRef:
