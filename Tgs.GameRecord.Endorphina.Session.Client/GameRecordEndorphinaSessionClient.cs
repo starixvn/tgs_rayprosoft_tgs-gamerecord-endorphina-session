@@ -1,4 +1,5 @@
-﻿using Tgs.GameRecord.Endorphina.Session.Protos;
+﻿using System.Runtime.CompilerServices;
+using Tgs.GameRecord.Endorphina.Session.Protos;
 
 namespace Tgs.GameRecord.Endorphina.Session.Client;
 
@@ -39,20 +40,96 @@ internal class GameRecordEndorphinaSessionClient : IGameRecordEndorphinaSessionC
         return session;
     }
 
-    public ValueTask MoveFailedAsync(string token, CancellationToken cancellationToken = default)
+    public async ValueTask MoveFailedAsync(string token, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var request = new MoveFailedRequest()
+        {
+            Token = token,
+        };
+
+        _ = await _client
+            .MoveFailedAsync(request, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
     }
 
-    public IAsyncEnumerable<Protos.Session> QuerySessionsAsync(Common.TokenState state, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+    public async IAsyncEnumerable<Protos.Session> QuerySessionsAsync(TokenState state, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var request = new QueryRequest()
+        {
+            State = state,
+        };
 
-    public ValueTask RemoveSessionAsync(string token, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        var reply = await _client
+            .QueryAsync(request, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
 
-    public ValueTask UpdateSessionCompleteAsync(string token, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        if (!reply.Items.Any())
+        {
+            yield break;
+        }
 
-    public ValueTask UpdateSessionFailedAsync(string token, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        foreach (var item in reply.Items)
+        {
+            yield return item;
+        }
+    }
 
-    public ValueTask UpdateSessionProcessingAsync(string token, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+    public async ValueTask RemoveSessionAsync(string token, CancellationToken cancellationToken = default)
+    {
+        var request = new RemoveRequest()
+        {
+            Token = token,
+        };
 
-    public ValueTask UpdateSessionRetryAsync(string token, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        _ = await _client
+            .RemoveAsync(request, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async ValueTask UpdateSessionCompleteAsync(string token, CancellationToken cancellationToken = default)
+    {
+        var request = new CompleteRequest()
+        {
+            Token = token,
+        };
+
+        _ = await _client
+            .CompleteAsync(request, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async ValueTask UpdateSessionFailedAsync(string token, CancellationToken cancellationToken = default)
+    {
+        var request = new FailedRequest()
+        {
+            Token = token,
+        };
+
+        _ = await _client
+            .FailedAsync(request, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async ValueTask UpdateSessionProcessingAsync(string token, CancellationToken cancellationToken = default)
+    {
+        var request = new ProcessingRequest()
+        {
+            Token = token,
+        };
+
+        _ = await _client
+            .ProcessingAsync(request, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async ValueTask UpdateSessionRetryAsync(string token, CancellationToken cancellationToken = default)
+    {
+        var request = new UpdateRetryRequest()
+        {
+            Token = token,
+        };
+
+        _ = await _client.UpdateRetryAsync(request, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+    }
 }

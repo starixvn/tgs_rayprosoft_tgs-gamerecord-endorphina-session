@@ -15,7 +15,7 @@ public class SessionGetUnitTest
         var playerCode = "4ucmqplxb029";
 
         _ = fakeRepository.GetAsync(token)
-            .Returns(new Models.Session(token, Common.TokenState.Queued, brandCode, playerCode, 0));
+            .Returns(new Models.Session(token, TokenState.Queued, brandCode, playerCode, 0));
 
         var sut = new SessionGetService(fakeRepository);
 

@@ -1,4 +1,4 @@
-﻿using Tgs.GameRecord.Endorphina.Session.Common;
+﻿using Tgs.GameRecord.Endorphina.Session.Protos;
 
 namespace Tgs.GameRecord.Endorphina.Session.Client;
 

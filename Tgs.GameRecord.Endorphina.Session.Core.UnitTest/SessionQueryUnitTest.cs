@@ -13,12 +13,12 @@ public class SessionQueryUnitTest
         var brandCode = "GPI";
         var playerCode = "4ucmqplxb029";
 
-        var state = Common.TokenState.Queued;
+        var state = TokenState.Queued;
 
         _ = fakeRepository.QueryAsync(state)
             .Returns(new Models.Session[] {
-                new Models.Session("AA8BB60F5A134264BE838CF6EBA7C8F1", Common.TokenState.Queued, brandCode, playerCode, 0),
-                new Models.Session("B9EBE140F7294D44931200A37918F063", Common.TokenState.Queued, brandCode, playerCode, 0)
+                new Models.Session("AA8BB60F5A134264BE838CF6EBA7C8F1", TokenState.Queued, brandCode, playerCode, 0),
+                new Models.Session("B9EBE140F7294D44931200A37918F063", TokenState.Queued, brandCode, playerCode, 0)
             }.ToAsyncEnumerable());
 
         var sut = new SessionQueryService(fakeRepository);

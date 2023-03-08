@@ -133,7 +133,7 @@ public class GameRecordEndorphinaSessionGrpcService : GameRecordEndorphinaSessio
     public override async Task<SessionReply> Query(QueryRequest request, ServerCallContext context)
     {
         var sessions = await _queryService
-            .QueryAsync(new SessionQuery((Common.TokenState)request.State), context.CancellationToken)
+            .QueryAsync(new SessionQuery((Core.TokenState)request.State), context.CancellationToken)
             .ToArrayAsync(context.CancellationToken)
             .ConfigureAwait(false);
 

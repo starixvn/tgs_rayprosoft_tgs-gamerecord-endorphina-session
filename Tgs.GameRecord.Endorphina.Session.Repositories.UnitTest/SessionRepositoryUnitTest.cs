@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
 using NSubstitute;
-using Tgs.GameRecord.Endorphina.Session.Common;
+using Tgs.GameRecord.Endorphina.Session.Core;
 using Tgs.GameRecord.Endorphina.Session.Repositories.Models;
 
 namespace Tgs.GameRecord.Endorphina.Session.Repositories.UnitTest;

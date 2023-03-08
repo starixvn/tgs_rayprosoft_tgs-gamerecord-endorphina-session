@@ -1,4 +1,4 @@
-﻿namespace Tgs.GameRecord.Endorphina.Session.Common;
+﻿namespace Tgs.GameRecord.Endorphina.Session.Core;
 
 public enum TokenState
 {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Tgs.GameRecord.Endorphina.Session.Common;
+using Tgs.GameRecord.Endorphina.Session.Core;
 using Tgs.GameRecord.Endorphina.Session.Core.ApplicationServices;
 using Tgs.GameRecord.Endorphina.Session.ViewModels;
 using Tgs.ServiceUtility;
@@ -156,6 +156,7 @@ public class SessionController : ControllerBase
             command: new SessionProcessingCommand(
                 Token: token),
             cancellationToken: HttpContext.RequestAborted);
+
     /// <summary>
     /// Updates the retry asynchronous.
     /// </summary>
@@ -176,6 +177,7 @@ public class SessionController : ControllerBase
         .ExecuteAsync(
             command: new UpdateSessionRetryCommand(token),
             cancellationToken: HttpContext.RequestAborted);
+
     /// <summary>
     /// Deletes the asynchronous.
     /// </summary>

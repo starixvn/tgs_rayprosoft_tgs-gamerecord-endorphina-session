@@ -29,10 +29,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Tgs.GameRecord.Endorphina.Session.Common\Tgs.GameRecord.Endorphina.Session.Common.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Protobuf Include="gamerecordendorphinasession.proto">
 	    <GrpcServices>Client</GrpcServices>
 	  </Protobuf>

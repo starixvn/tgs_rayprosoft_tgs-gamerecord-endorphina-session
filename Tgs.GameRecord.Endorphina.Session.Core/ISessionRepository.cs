@@ -1,6 +1,4 @@
-﻿using Tgs.GameRecord.Endorphina.Session.Common;
-
-namespace Tgs.GameRecord.Endorphina.Session.Core;
+﻿namespace Tgs.GameRecord.Endorphina.Session.Core;
 
 public interface ISessionRepository
 {

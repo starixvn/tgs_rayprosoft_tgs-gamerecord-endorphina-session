@@ -17,8 +17,4 @@
 		<PackageReference Include="TGS.ServiceUtility" Version="0.2.0" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\Tgs.GameRecord.Endorphina.Session.Common\Tgs.GameRecord.Endorphina.Session.Common.csproj" />
-	</ItemGroup>
-
 </Project>

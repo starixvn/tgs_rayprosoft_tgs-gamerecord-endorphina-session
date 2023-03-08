@@ -1,6 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
 using MongoDB.Driver;
-using Tgs.GameRecord.Endorphina.Session.Common;
 using Tgs.GameRecord.Endorphina.Session.Core;
 using Tgs.GameRecord.Endorphina.Session.Repositories.Models;
 

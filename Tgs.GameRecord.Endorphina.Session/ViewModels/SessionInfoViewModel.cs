@@ -1,4 +1,4 @@
-﻿using Tgs.GameRecord.Endorphina.Session.Common;
+﻿using Tgs.GameRecord.Endorphina.Session.Core;
 
 namespace Tgs.GameRecord.Endorphina.Session.ViewModels;
 
