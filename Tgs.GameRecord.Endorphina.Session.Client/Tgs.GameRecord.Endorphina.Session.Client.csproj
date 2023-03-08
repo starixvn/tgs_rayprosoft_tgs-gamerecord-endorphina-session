@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<Version>0.0.1</Version>
+	<Authors>Raypro</Authors>
+	<RootNamespace>Tgs.GameRecord.Endorphina.Session.Client</RootNamespace>
+	<PackageId>Tgs.GameRecord.Endorphina.Session.Client</PackageId>
+	<Title>Tgs.GameRecord.Endorphina.Session.Client</Title>
+	<PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-gamerecord-endorphina-session</PackageProjectUrl>
+	<RepositoryUrl>https://gitlab.com/rayprosoft/tgs-gamerecord-endorphina-session.git</RepositoryUrl>
+	<RepositoryType>git</RepositoryType>
+	<PackageTags>Tgs GameRecord Endorphina Session Client</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="gamerecordendorphinasession.proto" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.49.0" />
+		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.49.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.50.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>		
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Protobuf Include="gamerecordendorphinasession.proto">
+	    <GrpcServices>Client</GrpcServices>
+	  </Protobuf>
+	</ItemGroup>
+
+</Project>
