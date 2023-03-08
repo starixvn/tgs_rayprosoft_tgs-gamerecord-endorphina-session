@@ -5,10 +5,14 @@ namespace Tgs.GameRecord.Endorphina.Session.Core.ApplicationServices;
 internal class MoveFailedSessionCommandService : ICommandService<MoveFailedSessionCommand>
 {
     private readonly ISessionRepository _repository;
+    private readonly IFailedSessionRepository _failedSessionRepository;
 
-    public MoveFailedSessionCommandService(ISessionRepository repository)
+    public MoveFailedSessionCommandService(
+        ISessionRepository repository,
+        IFailedSessionRepository failedSessionRepository)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _failedSessionRepository = failedSessionRepository ?? throw new ArgumentNullException(nameof(failedSessionRepository));
     }
 
     public async ValueTask ExecuteAsync(MoveFailedSessionCommand command, CancellationToken cancellationToken = default)
@@ -20,7 +24,7 @@ internal class MoveFailedSessionCommandService : ICommandService<MoveFailedSessi
         if (result is null)
             return;
 
-        await _repository
+        await _failedSessionRepository
             .AddFailedAsync(result.Token, result.BrandCode, result.PlayerCode, cancellationToken)
             .ConfigureAwait(false);
 

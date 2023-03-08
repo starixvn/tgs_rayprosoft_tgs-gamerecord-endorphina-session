@@ -1,5 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Tgs.GameRecord.Endorphina.Session.Common;
 using Tgs.GameRecord.Endorphina.Session.Core;
@@ -10,14 +9,11 @@ namespace Tgs.GameRecord.Endorphina.Session.Repositories;
 internal class SessionRepository : ISessionRepository
 {
     private readonly IMongoDatabase _database;
-    private readonly ILogger<SessionRepository> _logger;
 
     public SessionRepository(
-        ILogger<SessionRepository> logger,
         IMongoDatabase database)
     {
         _database = database ?? throw new ArgumentNullException(nameof(database));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async ValueTask InitDBAsync(CancellationToken cancellationToken = default)
@@ -25,14 +21,6 @@ internal class SessionRepository : ISessionRepository
         var sessionCollection = GetSessionCollection();
 
         await State_IndexAsync(sessionCollection, cancellationToken)
-            .ConfigureAwait(false);
-
-        var failedSessionCollection = GetFailedSessionColletion();
-
-        await BrandCode_IndexAsync(failedSessionCollection, cancellationToken)
-            .ConfigureAwait(false);
-
-        await PlayerCode_IndexAsync(failedSessionCollection, cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -206,24 +194,6 @@ internal class SessionRepository : ISessionRepository
                 result.Retry);
     }
 
-    public async ValueTask AddFailedAsync(string token, string brandCode, string playerCode, CancellationToken cancellationToken = default)
-    {
-        var collection = GetFailedSessionColletion();
-
-        var document = new FailedSessionModel()
-        {
-            Id = token,
-            BrandCode = brandCode,
-            PlayerCode = playerCode
-        };
-
-        await collection
-            .InsertOneAsync(
-                document: document,
-                cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
-    }
-
     private static Task State_IndexAsync(
         IMongoCollection<SessionModel> collection,
         CancellationToken cancellationToken = default)
@@ -242,45 +212,6 @@ internal class SessionRepository : ISessionRepository
             cancellationToken: cancellationToken);
     }
 
-    private static Task BrandCode_IndexAsync(
-        IMongoCollection<FailedSessionModel> collection,
-        CancellationToken cancellationToken = default)
-    {
-        var index = Builders<FailedSessionModel>.IndexKeys
-            .Ascending(m => m.BrandCode);
-
-        var createIndexOptions = new CreateIndexOptions
-        {
-            Name = $"ix_brand_code"
-        };
-        var createIndexModel = new CreateIndexModel<FailedSessionModel>(index, createIndexOptions);
-
-        return collection.Indexes.CreateOneAsync(
-            model: createIndexModel,
-            cancellationToken: cancellationToken);
-    }
-
-    private static Task PlayerCode_IndexAsync(
-        IMongoCollection<FailedSessionModel> collection,
-        CancellationToken cancellationToken = default)
-    {
-        var index = Builders<FailedSessionModel>.IndexKeys
-            .Ascending(m => m.PlayerCode);
-
-        var createIndexOptions = new CreateIndexOptions
-        {
-            Name = $"ix_player_code"
-        };
-        var createIndexModel = new CreateIndexModel<FailedSessionModel>(index, createIndexOptions);
-
-        return collection.Indexes.CreateOneAsync(
-            model: createIndexModel,
-            cancellationToken: cancellationToken);
-    }
-
     private IMongoCollection<SessionModel> GetSessionCollection()
         => _database.GetCollection<SessionModel>("Endorphina_sessions");
-
-    private IMongoCollection<FailedSessionModel> GetFailedSessionColletion()
-        => _database.GetCollection<FailedSessionModel>("Endorphina_Failed_sessions");
 }

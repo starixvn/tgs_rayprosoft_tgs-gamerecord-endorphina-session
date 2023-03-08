@@ -8,9 +8,14 @@ public static class ServiceRegisterExtensions
     {
         using (var scope = app.Services.CreateScope())
         {
-            var scheduleFormRepository = scope.ServiceProvider.GetRequiredService<ISessionRepository>();
+            var sessionRepository = scope.ServiceProvider.GetRequiredService<ISessionRepository>();
+            var failedSessionRepository = scope.ServiceProvider.GetRequiredService<IFailedSessionRepository>();
 
-            await scheduleFormRepository
+            await sessionRepository
+                .InitDBAsync()
+                .ConfigureAwait(false);
+
+            await failedSessionRepository
                 .InitDBAsync()
                 .ConfigureAwait(false);
         }

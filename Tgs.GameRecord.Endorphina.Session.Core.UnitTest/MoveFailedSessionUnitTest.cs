@@ -10,6 +10,7 @@ public class MoveFailedSessionUnitTest
     public async Task 搬移狀態Failed且Retry3次的Session到FailedSession表()
     {
         var fakeRepository = Substitute.For<ISessionRepository>();
+        var fakeFailedSessionRepository = Substitute.For<IFailedSessionRepository>();
 
         var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
         var brandCode = "GPI";
@@ -19,11 +20,11 @@ public class MoveFailedSessionUnitTest
             .GetAsync(token)
             .Returns(new Models.Session(token, TokenState.Failed, brandCode, playerCode, 3));
 
-        var sut = new MoveFailedSessionCommandService(fakeRepository);
+        var sut = new MoveFailedSessionCommandService(fakeRepository, fakeFailedSessionRepository);
 
         await sut.ExecuteAsync(new MoveFailedSessionCommand(token));
 
-        _ = fakeRepository.Received(1)
+        _ = fakeFailedSessionRepository.Received(1)
             .AddFailedAsync(token, brandCode, playerCode)
             .ConfigureAwait(false);
 

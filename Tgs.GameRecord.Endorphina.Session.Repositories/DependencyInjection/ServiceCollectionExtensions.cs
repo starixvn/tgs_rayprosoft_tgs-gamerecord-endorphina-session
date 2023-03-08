@@ -10,5 +10,6 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services,
         Func<IServiceProvider, IMongoDatabase> mongoDatabaseResolver)
         => services
-        .AddTransient<ISessionRepository>((sp) => ActivatorUtilities.CreateInstance<SessionRepository>(sp, mongoDatabaseResolver(sp)));
+        .AddTransient<ISessionRepository>((sp) => ActivatorUtilities.CreateInstance<SessionRepository>(sp, mongoDatabaseResolver(sp)))
+        .AddTransient<IFailedSessionRepository>((sp) => ActivatorUtilities.CreateInstance<FailedSessionRepository>(sp, mongoDatabaseResolver(sp)));
 }

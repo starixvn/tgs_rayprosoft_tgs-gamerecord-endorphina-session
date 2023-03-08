@@ -39,10 +39,4 @@ public interface ISessionRepository
     ValueTask DeleteAsync(
         string token,
         CancellationToken cancellationToken = default);
-
-    ValueTask AddFailedAsync(
-        string token,
-        string brandCode,
-        string playerCode,
-        CancellationToken cancellationToken = default);
 }
