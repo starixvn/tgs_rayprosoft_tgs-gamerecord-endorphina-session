@@ -11,7 +11,6 @@ WORKDIR /src
 COPY ["nuget.config", "."]
 COPY ["Tgs.GameRecord.Endorphina.Session/Tgs.GameRecord.Endorphina.Session.csproj", "Tgs.GameRecord.Endorphina.Session/"]
 COPY ["Tgs.GameRecord.Endorphina.Session.Core/Tgs.GameRecord.Endorphina.Session.Core.csproj", "Tgs.GameRecord.Endorphina.Session.Core/"]
-COPY ["Tgs.GameRecord.Endorphina.Session.Common/Tgs.GameRecord.Endorphina.Session.Common.csproj", "Tgs.GameRecord.Endorphina.Session.Common/"]
 COPY ["Tgs.GameRecord.Endorphina.Session.Repositories/Tgs.GameRecord.Endorphina.Session.Repositories.csproj", "Tgs.GameRecord.Endorphina.Session.Repositories/"]
 RUN dotnet restore "Tgs.GameRecord.Endorphina.Session/Tgs.GameRecord.Endorphina.Session.csproj"
 COPY . .
