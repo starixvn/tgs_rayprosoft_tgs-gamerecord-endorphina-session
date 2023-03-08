@@ -108,6 +108,7 @@ deploy-dev:
       artifacts: true
   only:
     - main
+  when: manual
   before_script:
     - export KUBECONFIG=$KubeConfig_Raypro_dev
   script:
