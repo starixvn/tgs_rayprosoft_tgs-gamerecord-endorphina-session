@@ -1,0 +1,82 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Tgs.GameRecord.Endorphina.Session.Protos";
+
+package GameRecordEndorphinaSession;
+
+// The greeting service definition.
+service  GameRecordEndorphinaSession{
+  // Sends a greeting
+  rpc Add (AddRequest) returns (BaseReply);
+  rpc Get (GetRequest) returns (Session);
+  rpc Query (QueryRequest) returns (SessionReply);
+  rpc Complete (CompleteRequest) returns (BaseReply);
+  rpc Failed (FailedRequest) returns (BaseReply);
+  rpc Processing (ProcessingRequest) returns (BaseReply);
+  rpc UpdateRetry (UpdateRetryRequest) returns (BaseReply);
+  rpc Remove (RemoveRequest) returns (BaseReply); 
+  rpc MoveFailed (MoveFailedRequest) returns (BaseReply);
+}
+
+// The request message containing the user's name.
+message AddRequest {	
+	string token = 1;
+	string brand_code = 2;
+	string player_code = 3;
+}
+
+message GetRequest {	
+	string token = 1;
+}
+
+message QueryRequest {
+	TokenState state = 1;
+}
+
+message CompleteRequest {
+	string token = 1;
+}
+
+message FailedRequest {
+	string token = 1;
+}
+
+message ProcessingRequest {
+	string token = 1;
+}
+
+message UpdateRetryRequest {
+	string token = 1;
+}
+
+message RemoveRequest {
+	string token = 1;
+}
+
+message MoveFailedRequest {
+	string token = 1;
+}
+
+// The response message containing the greetings.
+message BaseReply{
+	bool status = 1;
+}
+
+message SessionReply {
+	repeated Session items = 1;
+}
+
+message Session {
+	string token = 1;
+	TokenState state = 2;
+	string brand_code = 3;
+	string player_code = 4;
+    int32 retry = 5;
+}
+
+enum TokenState{
+	TOKEN_STATE_QUEUED = 0;
+	TOKEN_STATE_PROCESSING = 1;
+	TOKEN_STATE_COMPLETE = 2;
+	TOKEN_STATE_FAILED = 3;
+}
