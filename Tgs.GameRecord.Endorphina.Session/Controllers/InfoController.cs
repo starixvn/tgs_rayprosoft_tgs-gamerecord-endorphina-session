@@ -39,7 +39,6 @@ public class InfoController : ControllerBase
                 OsVersion = $"{Environment.OSVersion}",
                 Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(),
                 ProcessCount = Environment.ProcessorCount,
-                POD_IP = _configuration.GetValue<string>("POD_IP")
             }
         };
     }
