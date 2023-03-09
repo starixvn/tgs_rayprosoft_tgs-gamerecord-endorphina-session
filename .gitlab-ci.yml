@@ -1,7 +1,7 @@
 variables:
-  ImageName: pgtgs/gamerecord-endorphina-session
-  TgsSettingKey: gamerecord-endorphina-session
-  HelmTemplateFolderName: gamerecord-endorphina-session
+  ImageName: pgtgs/game-gamerecord-endorphina-session
+  TgsSettingKey: game-gamerecord-endorphina-session
+  HelmTemplateFolderName: game-gamerecord-endorphina-session
   BuildCacheKey: Tgs.GameRecord.Endorphina.Session.$CI_PIPELINE_ID
 
 stages:
