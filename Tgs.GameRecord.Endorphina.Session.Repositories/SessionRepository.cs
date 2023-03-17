@@ -104,7 +104,8 @@ internal class SessionRepository : ISessionRepository
         var filter = builder.Eq(x => x.Id, token);
 
         var update = Builders<SessionModel>.Update
-            .Inc(s => s.Retry, 1);
+            .Inc(s => s.Retry, 1)
+            .Set(s => s.State, TokenState.Queued);
 
         var result = await collection
             .UpdateOneAsync(
