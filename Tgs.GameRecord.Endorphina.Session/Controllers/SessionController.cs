@@ -49,7 +49,7 @@ public class SessionController : ControllerBase
     /// <b>Example</b><br />
     ///
     ///     Get
-    ///         /AA8BB60F5A134264BE838CF6EBA7C8F1
+    ///         /AA8BB60F5A134264BE838CF6EBA7C8F1    
     /// </remarks>
     [HttpGet("get/{token}", Name = "Get")]
     public async ValueTask<SessionInfoViewModel?> GetAsync(
@@ -68,7 +68,8 @@ public class SessionController : ControllerBase
             result.State,
             result.BrandCode,
             result.PlayerCode,
-            result.Retry);
+            result.Retry,
+            result.MerchantId);
     }
 
     /// <summary>
@@ -83,6 +84,7 @@ public class SessionController : ControllerBase
     ///
     ///     Get
     ///         /Queued
+    ///         /1494
     /// </remarks>
     [HttpGet("query/{merchantId}/{state}", Name = "Query")]
     public IAsyncEnumerable<SessionInfo> QueryAsync(

@@ -7,4 +7,5 @@ public record SessionInfoViewModel(
     TokenState State,
     string BrandCode,
     string PlayerCode,
-    int Retry);
+    int Retry,
+    string MerchantId);
