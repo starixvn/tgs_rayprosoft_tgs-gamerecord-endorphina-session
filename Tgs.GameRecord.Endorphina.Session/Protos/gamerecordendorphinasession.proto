@@ -23,6 +23,7 @@ message AddRequest {
 	string token = 1;
 	string brand_code = 2;
 	string player_code = 3;
+	string merchant_id = 4;
 }
 
 message GetRequest {	
@@ -31,6 +32,7 @@ message GetRequest {
 
 message QueryRequest {
 	TokenState state = 1;
+	string merchant_id = 2;
 }
 
 message CompleteRequest {
@@ -72,6 +74,7 @@ message Session {
 	string brand_code = 3;
 	string player_code = 4;
     int32 retry = 5;
+	string merchant_id = 6;
 }
 
 enum TokenState{

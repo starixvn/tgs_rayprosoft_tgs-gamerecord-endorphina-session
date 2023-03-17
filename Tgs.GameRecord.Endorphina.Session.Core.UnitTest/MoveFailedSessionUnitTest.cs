@@ -14,17 +14,18 @@ public class MoveFailedSessionUnitTest
         var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
         var brandCode = "GPI";
         var playerCode = "4ucmqplxb029";
+        var merchantId = "1494";
 
         _ = fakeRepository
             .GetAsync(token)
-            .Returns(new Models.Session(token, TokenState.Failed, brandCode, playerCode, 3));
+            .Returns(new Models.Session(token, TokenState.Failed, brandCode, playerCode, 3, merchantId));
 
         var sut = new MoveFailedSessionCommandService(fakeRepository, fakeFailedSessionRepository);
 
         await sut.ExecuteAsync(new MoveFailedSessionCommand(token));
 
         _ = fakeFailedSessionRepository.Received(1)
-            .AddFailedAsync(token, brandCode, playerCode)
+            .AddFailedAsync(token, brandCode, playerCode, merchantId)
             .ConfigureAwait(false);
 
         _ = fakeRepository.Received(1)

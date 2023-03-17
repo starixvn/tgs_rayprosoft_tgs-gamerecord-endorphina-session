@@ -23,7 +23,7 @@ internal class SessionRepository : ISessionRepository
             .ConfigureAwait(false);
     }
 
-    public async ValueTask AddAsync(string token, string brandCode, string playerCode, CancellationToken cancellationToken = default)
+    public async ValueTask AddAsync(string token, string brandCode, string playerCode, string merchantId, CancellationToken cancellationToken = default)
     {
         var collection = GetSessionCollection();
 
@@ -33,7 +33,8 @@ internal class SessionRepository : ISessionRepository
             BrandCode = brandCode,
             PlayerCode = playerCode,
             State = TokenState.Queued,
-            Retry = 0
+            MerchantId = merchantId,
+            Retry = 0,
         };
 
         await collection
@@ -45,13 +46,15 @@ internal class SessionRepository : ISessionRepository
 
     public async IAsyncEnumerable<Core.Models.Session> QueryAsync(
         TokenState state,
+        string merchantId,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var collection = GetSessionCollection();
 
         var builder = Builders<SessionModel>.Filter;
 
-        var filter = builder.Eq(x => x.State, state);
+        var filter = builder.Eq(x => x.State, state)
+            & builder.Eq(x => x.MerchantId, merchantId);
 
         var asyncCursor = await collection
             .FindAsync(
@@ -71,7 +74,8 @@ internal class SessionRepository : ISessionRepository
                     State: current.State,
                     BrandCode: current.BrandCode,
                     PlayerCode: current.PlayerCode,
-                    Retry: current.Retry);
+                    Retry: current.Retry,
+                    MerchantId: current.MerchantId);
             }
         }
     }
@@ -191,7 +195,8 @@ internal class SessionRepository : ISessionRepository
                 result.State,
                 result.BrandCode,
                 result.PlayerCode,
-                result.Retry);
+                result.Retry,
+                result.MerchantId);
     }
 
     private static Task State_IndexAsync(

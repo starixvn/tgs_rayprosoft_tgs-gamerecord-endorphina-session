@@ -13,13 +13,14 @@ internal class GameRecordEndorphinaSessionClient : IGameRecordEndorphinaSessionC
         _client = client ?? throw new ArgumentNullException(nameof(client));
     }
 
-    public async ValueTask AddSessionAsync(string token, string brandCode, string playerCode, CancellationToken cancellationToken = default)
+    public async ValueTask AddSessionAsync(string token, string brandCode, string playerCode, string merchantId, CancellationToken cancellationToken = default)
     {
         var request = new AddRequest
         {
             Token = token,
             BrandCode = brandCode,
-            PlayerCode = playerCode
+            PlayerCode = playerCode,
+            MerchantId = merchantId,
         };
 
         _ = await _client.AddAsync(request, cancellationToken: cancellationToken)
@@ -52,11 +53,15 @@ internal class GameRecordEndorphinaSessionClient : IGameRecordEndorphinaSessionC
             .ConfigureAwait(false);
     }
 
-    public async IAsyncEnumerable<Protos.Session> QuerySessionsAsync(TokenState state, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<Protos.Session> QuerySessionsAsync(
+        TokenState state,
+        string merchantId,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var request = new QueryRequest()
         {
             State = state,
+            MerchantId = merchantId,
         };
 
         var reply = await _client

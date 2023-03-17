@@ -17,4 +17,8 @@ public record FailedSessionModel
     [BsonDefaultValue(false)]
     [BsonRepresentation(BsonType.String)]
     public string PlayerCode { get; set; } = default!;
+
+    [BsonElement("merchant_id")]
+    [BsonRepresentation(BsonType.String)]
+    public string MerchantId { get; set; } = default!;
 }

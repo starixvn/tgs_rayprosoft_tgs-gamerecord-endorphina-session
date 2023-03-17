@@ -8,5 +8,6 @@ public interface IFailedSessionRepository
         string token,
         string brandCode,
         string playerCode,
+        string merchantId,
         CancellationToken cancellationToken = default);
 }

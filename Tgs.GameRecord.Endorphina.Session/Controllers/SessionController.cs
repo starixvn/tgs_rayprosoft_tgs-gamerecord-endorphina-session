@@ -23,7 +23,8 @@ public class SessionController : ControllerBase
     ///         {
     ///             "token": "AA8BB60F5A134264BE838CF6EBA7C8F1",
     ///             "brandCode": "GPI",
-    ///             "playerCode": "4ucmqplxb029"
+    ///             "playerCode": "4ucmqplxb029",
+    ///             "merchantId": "1494"
     ///         }
     /// </remarks>
     [HttpPost("add", Name = "Add")]
@@ -34,7 +35,8 @@ public class SessionController : ControllerBase
             command: new AddSessionCommand(
                 model.Token,
                 model.BrandCode,
-                model.PlayerCode),
+                model.PlayerCode,
+                model.MerchantId),
             cancellationToken: HttpContext.RequestAborted);
 
     /// <summary>
@@ -47,7 +49,7 @@ public class SessionController : ControllerBase
     /// <b>Example</b><br />
     ///
     ///     Get
-    ///         /AA8BB60F5A134264BE838CF6EBA7C8F1
+    ///         /AA8BB60F5A134264BE838CF6EBA7C8F1    
     /// </remarks>
     [HttpGet("get/{token}", Name = "Get")]
     public async ValueTask<SessionInfoViewModel?> GetAsync(
@@ -66,7 +68,8 @@ public class SessionController : ControllerBase
             result.State,
             result.BrandCode,
             result.PlayerCode,
-            result.Retry);
+            result.Retry,
+            result.MerchantId);
     }
 
     /// <summary>
@@ -74,21 +77,25 @@ public class SessionController : ControllerBase
     /// </summary>
     /// <param name="service">The service.</param>
     /// <param name="state">The state.</param>
+    /// <param name="merchantId">The merchantId.</param>
     /// <returns></returns>
     /// <remarks>
     /// <b>Example</b><br />
     ///
     ///     Get
     ///         /Queued
+    ///         /1494
     /// </remarks>
-    [HttpGet("query/{state}", Name = "Query")]
+    [HttpGet("query/{merchantId}/{state}", Name = "Query")]
     public IAsyncEnumerable<SessionInfo> QueryAsync(
         [FromServices] IQueryService<SessionQuery, SessionInfo> service,
-        TokenState state)
+        TokenState state,
+        string merchantId)
         => service
         .QueryAsync(
             query: new SessionQuery(
-                State: state),
+                State: state,
+                MerchantId: merchantId),
             cancellationToken: HttpContext.RequestAborted);
 
     /// <summary>

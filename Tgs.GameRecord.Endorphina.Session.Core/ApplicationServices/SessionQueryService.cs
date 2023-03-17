@@ -13,6 +13,6 @@ internal class SessionQueryService : IQueryService<SessionQuery, SessionInfo>
 
     public IAsyncEnumerable<SessionInfo> QueryAsync(SessionQuery query, CancellationToken cancellationToken = default)
         => _repository
-            .QueryAsync(query.State, cancellationToken)
-            .Select(x => new SessionInfo(x.Token, x.State, x.BrandCode, x.PlayerCode, x.Retry));
+            .QueryAsync(query.State, query.MerchantId, cancellationToken)
+            .Select(x => new SessionInfo(x.Token, x.State, x.BrandCode, x.PlayerCode, x.Retry, x.MerchantId));
 }
