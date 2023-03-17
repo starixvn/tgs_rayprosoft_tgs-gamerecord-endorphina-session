@@ -43,7 +43,7 @@ public class GameRecordEndorphinaSessionGrpcService : GameRecordEndorphinaSessio
     {
         await _addService
             .ExecuteAsync(
-                new AddSessionCommand(request.Token, request.BrandCode, request.PlayerCode),
+                new AddSessionCommand(request.Token, request.BrandCode, request.PlayerCode, request.MerchantId),
                 context.CancellationToken)
             .ConfigureAwait(false);
 
@@ -126,14 +126,15 @@ public class GameRecordEndorphinaSessionGrpcService : GameRecordEndorphinaSessio
             BrandCode = session.BrandCode,
             PlayerCode = session.PlayerCode,
             Retry = session.Retry,
-            State = (TokenState)session.State
+            State = (TokenState)session.State,
+            MerchantId = session.MerchantId,
         };
     }
 
     public override async Task<SessionReply> Query(QueryRequest request, ServerCallContext context)
     {
         var sessions = await _queryService
-            .QueryAsync(new SessionQuery((Core.TokenState)request.State), context.CancellationToken)
+            .QueryAsync(new SessionQuery((Core.TokenState)request.State, request.MerchantId), context.CancellationToken)
             .ToArrayAsync(context.CancellationToken)
             .ConfigureAwait(false);
 
@@ -150,6 +151,7 @@ public class GameRecordEndorphinaSessionGrpcService : GameRecordEndorphinaSessio
                     Retry = session.Retry,
                     State = (TokenState)session.State,
                     Token = session.Token,
+                    MerchantId = session.MerchantId,
                 });
             }
         }

@@ -4,4 +4,5 @@ public record Session(
     TokenState State,
     string BrandCode,
     string PlayerCode,
-    int Retry);
+    int Retry,
+    string MerchantId);

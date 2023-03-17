@@ -13,9 +13,10 @@ public class SessionGetUnitTest
         var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
         var brandCode = "GPI";
         var playerCode = "4ucmqplxb029";
+        var merchantId = "1494";
 
         _ = fakeRepository.GetAsync(token)
-            .Returns(new Models.Session(token, TokenState.Queued, brandCode, playerCode, 0));
+            .Returns(new Models.Session(token, TokenState.Queued, brandCode, playerCode, 0, "1494"));
 
         var sut = new SessionGetService(fakeRepository);
 
@@ -24,5 +25,6 @@ public class SessionGetUnitTest
         Assert.Equal(token, actual!.Token);
         Assert.Equal(brandCode, actual!.BrandCode);
         Assert.Equal(playerCode, actual!.PlayerCode);
+        Assert.Equal(merchantId, actual!.MerchantId);
     }
 }

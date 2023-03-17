@@ -8,6 +8,7 @@ public interface IGameRecordEndorphinaSessionClient
         string token,
         string brandCode,
         string playerCode,
+        string merchantId,
         CancellationToken cancellationToken = default);
 
     ValueTask<Protos.Session> GetSessionAsync(
@@ -16,6 +17,7 @@ public interface IGameRecordEndorphinaSessionClient
 
     IAsyncEnumerable<Protos.Session> QuerySessionsAsync(
         TokenState state,
+        string merchantId,
         CancellationToken cancellationToken = default);
 
     ValueTask UpdateSessionCompleteAsync(

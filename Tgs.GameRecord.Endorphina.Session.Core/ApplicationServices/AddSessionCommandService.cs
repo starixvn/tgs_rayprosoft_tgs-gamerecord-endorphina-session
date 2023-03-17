@@ -12,5 +12,10 @@ internal class AddSessionCommandService : ICommandService<AddSessionCommand>
     }
 
     public ValueTask ExecuteAsync(AddSessionCommand command, CancellationToken cancellationToken = default)
-        => _repository.AddAsync(command.Token, command.BrandCode, command.PlayerCode, cancellationToken);
+        => _repository.AddAsync(
+            command.Token,
+            command.BrandCode,
+            command.PlayerCode,
+            command.MerchantId,
+            cancellationToken);
 }

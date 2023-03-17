@@ -20,6 +20,12 @@ internal class SessionGetService : IGetService<SessionGet, SessionInfo?>
         if (result == null)
             return null;
 
-        return new SessionInfo(result!.Token, result.State, result.BrandCode, result.PlayerCode, result.Retry);
+        return new SessionInfo(
+            result!.Token,
+            result.State,
+            result.BrandCode,
+            result.PlayerCode,
+            result.Retry,
+            result.MerchantId);
     }
 }

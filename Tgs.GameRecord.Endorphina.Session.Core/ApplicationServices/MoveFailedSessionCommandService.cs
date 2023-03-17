@@ -25,7 +25,7 @@ internal class MoveFailedSessionCommandService : ICommandService<MoveFailedSessi
             return;
 
         await _failedSessionRepository
-            .AddFailedAsync(result.Token, result.BrandCode, result.PlayerCode, cancellationToken)
+            .AddFailedAsync(result.Token, result.BrandCode, result.PlayerCode, result.MerchantId, cancellationToken)
             .ConfigureAwait(false);
 
         await _repository

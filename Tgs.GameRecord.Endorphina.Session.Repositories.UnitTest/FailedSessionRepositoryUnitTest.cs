@@ -15,23 +15,20 @@ public class FailedSessionRepositoryUnitTest
         var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
         var brandCode = "GPI";
         var playerCode = "4ucmqplxb029";
+        var merchantId = "1494";
 
         var repository = new FailedSessionRepository(fakerMongoDatabase);
 
         await repository
-            .AddFailedAsync(token, brandCode, playerCode)
-            .ConfigureAwait(false);
-
-        var builder = Builders<SessionModel>.Filter;
-        var filter = builder.Eq(x => x.Id, token);
-        var update = Builders<SessionModel>.Update
-            .Set(s => s.State, TokenState.Complete);
+            .AddFailedAsync(token, brandCode, playerCode, merchantId)
+            .ConfigureAwait(false);        
 
         var failedSession = new FailedSessionModel()
         {
             Id = token,
             BrandCode = brandCode,
             PlayerCode = playerCode,
+            MerchantId = merchantId,
         };
 
         _ = fakerMongoDatabase.Received(1)

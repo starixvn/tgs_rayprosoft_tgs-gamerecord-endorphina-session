@@ -17,15 +17,11 @@ public class SessionRepositoryUnitTest
         var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
         var brandCode = "GPI";
         var playerCode = "4ucmqplxb029";
+        var merchantId = "1494";
 
         await repository
-            .AddAsync(token, brandCode, playerCode)
-            .ConfigureAwait(false);
-
-        var builder = Builders<SessionModel>.Filter;
-        var filter = builder.Eq(x => x.Id, token);
-        var update = Builders<SessionModel>.Update
-            .Set(s => s.State, TokenState.Complete);
+            .AddAsync(token, brandCode, playerCode, merchantId)
+            .ConfigureAwait(false);        
 
         var session = new SessionModel()
         {
@@ -51,11 +47,13 @@ public class SessionRepositoryUnitTest
         var repository = new SessionRepository(fakerMongoDatabase);
 
         var state = TokenState.Queued;
+        var merchantId = "1494";
         var builder = Builders<SessionModel>.Filter;
-        var filter = builder.Eq(x => x.State, state);
+        var filter = builder.Eq(x => x.State, state)
+            & builder.Eq(x => x.MerchantId, merchantId);
 
         var actual = await repository
-            .QueryAsync(state)
+            .QueryAsync(state, merchantId)
             .ToArrayAsync()
             .ConfigureAwait(false);
 

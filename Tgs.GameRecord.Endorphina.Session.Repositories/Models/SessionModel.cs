@@ -25,4 +25,8 @@ public record SessionModel
     [BsonElement("retry")]
     [BsonRepresentation(BsonType.Int32)]
     public int Retry { get; set; }
+
+    [BsonElement("merchant_id")]
+    [BsonRepresentation(BsonType.String)]
+    public string MerchantId { get; set; } = default!;
 }

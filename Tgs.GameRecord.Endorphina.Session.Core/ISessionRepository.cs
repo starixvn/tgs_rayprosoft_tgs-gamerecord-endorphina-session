@@ -8,10 +8,12 @@ public interface ISessionRepository
         string token,
         string brandCode,
         string playerCode,
+        string merchantId,
         CancellationToken cancellationToken = default);
 
     IAsyncEnumerable<Models.Session> QueryAsync(
         TokenState state,
+        string merchantId,
         CancellationToken cancellationToken = default);
 
     ValueTask<Models.Session?> GetAsync(

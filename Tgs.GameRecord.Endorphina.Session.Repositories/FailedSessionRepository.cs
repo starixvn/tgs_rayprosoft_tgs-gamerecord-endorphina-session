@@ -25,7 +25,7 @@ internal class FailedSessionRepository : IFailedSessionRepository
             .ConfigureAwait(false);
     }
 
-    public async ValueTask AddFailedAsync(string token, string brandCode, string playerCode, CancellationToken cancellationToken = default)
+    public async ValueTask AddFailedAsync(string token, string brandCode, string playerCode, string merchantId, CancellationToken cancellationToken = default)
     {
         var collection = GetFailedSessionColletion();
 
@@ -33,7 +33,8 @@ internal class FailedSessionRepository : IFailedSessionRepository
         {
             Id = token,
             BrandCode = brandCode,
-            PlayerCode = playerCode
+            PlayerCode = playerCode,
+            MerchantId = merchantId,
         };
 
         await collection
