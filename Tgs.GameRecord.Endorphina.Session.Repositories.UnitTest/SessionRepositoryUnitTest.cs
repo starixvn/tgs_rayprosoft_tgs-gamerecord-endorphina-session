@@ -110,7 +110,8 @@ public class SessionRepositoryUnitTest
         var builder = Builders<SessionModel>.Filter;
         var filter = builder.Eq(x => x.Id, token);
         var update = Builders<SessionModel>.Update
-            .Inc(s => s.Retry, 1);
+            .Inc(s => s.Retry, 1)
+            .Set(s => s.State, TokenState.Queued);
 
         _ = fakerMongoDatabase.Received(1)
             .GetCollection<SessionModel>("Endorphina_sessions")
