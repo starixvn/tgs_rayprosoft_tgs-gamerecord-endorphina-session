@@ -10,4 +10,8 @@ public interface IFailedSessionRepository
         string playerCode,
         string merchantId,
         CancellationToken cancellationToken = default);
+
+    IAsyncEnumerable<Models.FailedSession> QueryFailedAsync(
+        string merchantId,
+        CancellationToken cancellationToken = default);
 }

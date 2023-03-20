@@ -37,4 +37,29 @@ public class FailedSessionRepositoryUnitTest
                 document: Arg.Is(failedSession))
             .ConfigureAwait(false);
     }
+
+    [Fact]
+    public async Task Query()
+    {
+        var fakerMongoDatabase = Substitute.For<IMongoDatabase>();
+
+        var repository = new FailedSessionRepository(fakerMongoDatabase);
+        
+        var merchantId = "1494";
+        var builder = Builders<FailedSessionModel>.Filter;
+        var filter = builder.Eq(x => x.MerchantId, merchantId);
+
+        var actual = await repository
+            .QueryFailedAsync(merchantId)
+            .ToArrayAsync()
+            .ConfigureAwait(false);
+
+        _ = fakerMongoDatabase.Received(1)
+            .GetCollection<FailedSessionModel>("Endorphina_Failed_sessions")
+            .FindAsync(
+                filter: filter)
+            .ConfigureAwait(false);
+
+        Assert.NotNull(actual);
+    }
 }

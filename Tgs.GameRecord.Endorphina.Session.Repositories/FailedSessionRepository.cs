@@ -1,5 +1,7 @@
-﻿using MongoDB.Driver;
+﻿using System.Runtime.CompilerServices;
+using MongoDB.Driver;
 using Tgs.GameRecord.Endorphina.Session.Core;
+using Tgs.GameRecord.Endorphina.Session.Core.Models;
 using Tgs.GameRecord.Endorphina.Session.Repositories.Models;
 
 namespace Tgs.GameRecord.Endorphina.Session.Repositories;
@@ -17,6 +19,9 @@ internal class FailedSessionRepository : IFailedSessionRepository
     public async ValueTask InitDBAsync(CancellationToken cancellationToken = default)
     {
         var failedSessionCollection = GetFailedSessionColletion();
+
+        await MerchantId_IndexAsync(failedSessionCollection, cancellationToken)
+            .ConfigureAwait(false);
 
         await BrandCode_IndexAsync(failedSessionCollection, cancellationToken)
             .ConfigureAwait(false);
@@ -42,6 +47,38 @@ internal class FailedSessionRepository : IFailedSessionRepository
                 document: document,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
+    }
+
+    public async IAsyncEnumerable<FailedSession> QueryFailedAsync(
+        string merchantId,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var collection = GetFailedSessionColletion();
+
+        var builder = Builders<FailedSessionModel>.Filter;
+
+        var filter = builder.Eq(x => x.MerchantId, merchantId);
+
+        var asyncCursor = await collection
+            .FindAsync(
+                filter: filter,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        while (await asyncCursor
+                .MoveNextAsync(
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false))
+        {
+            foreach (var current in asyncCursor.Current)
+            {
+                yield return new Core.Models.FailedSession(
+                    Token: current.Id,
+                    BrandCode: current.BrandCode,
+                    PlayerCode: current.PlayerCode,
+                    MerchantId: current.MerchantId);
+            }
+        }
     }
 
     private static Task BrandCode_IndexAsync(
@@ -72,6 +109,24 @@ internal class FailedSessionRepository : IFailedSessionRepository
         var createIndexOptions = new CreateIndexOptions
         {
             Name = $"ix_player_code"
+        };
+        var createIndexModel = new CreateIndexModel<FailedSessionModel>(index, createIndexOptions);
+
+        return collection.Indexes.CreateOneAsync(
+            model: createIndexModel,
+            cancellationToken: cancellationToken);
+    }
+
+    private static Task MerchantId_IndexAsync(
+        IMongoCollection<FailedSessionModel> collection,
+        CancellationToken cancellationToken = default)
+    {
+        var index = Builders<FailedSessionModel>.IndexKeys
+            .Ascending(m => m.MerchantId);
+
+        var createIndexOptions = new CreateIndexOptions
+        {
+            Name = $"ix_merchant_id"
         };
         var createIndexModel = new CreateIndexModel<FailedSessionModel>(index, createIndexOptions);
 
