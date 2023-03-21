@@ -206,7 +206,7 @@ public class SessionController : ControllerBase
             cancellationToken: HttpContext.RequestAborted);
 
     /// <summary>
-    /// Moves the failed asynchronous.
+    /// 從Session表 搬移到 Failed Session表.
     /// </summary>
     /// <param name="service">The service.</param>
     /// <param name="token">The token.</param>
@@ -223,5 +223,21 @@ public class SessionController : ControllerBase
         string token)
         => service.ExecuteAsync(
             command: new MoveFailedSessionCommand(token),
+            cancellationToken: HttpContext.RequestAborted);
+
+    /// <summary>
+    /// 查詢Failed Session
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <param name="merchantId">The merchant identifier.</param>
+    /// <returns></returns>
+    [HttpGet("query/{merchantId}", Name = "QueryFailed")]
+    public IAsyncEnumerable<FailedSessionInfo> QueryFailedAsync(
+        [FromServices] IQueryService<FailedSessionQuery, FailedSessionInfo> service,
+        string merchantId)
+        => service
+        .QueryAsync(
+            query: new FailedSessionQuery(
+                MerchantId: merchantId),
             cancellationToken: HttpContext.RequestAborted);
 }
