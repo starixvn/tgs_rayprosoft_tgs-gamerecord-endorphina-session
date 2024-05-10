@@ -1,23 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-	<Version>1.0.0</Version>
-	<Authors>Raypro</Authors>
-	<RootNamespace>Tgs.GameRecord.Endorphina.Session.Client</RootNamespace>
-	<PackageId>Tgs.GameRecord.Endorphina.Session.Client</PackageId>
-	<Title>Tgs.GameRecord.Endorphina.Session.Client</Title>
-	<PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-gamerecord-endorphina-session</PackageProjectUrl>
-	<RepositoryUrl>https://gitlab.com/rayprosoft/tgs-gamerecord-endorphina-session.git</RepositoryUrl>
-	<RepositoryType>git</RepositoryType>
-	<PackageTags>Tgs GameRecord Endorphina Session Client</PackageTags>
-  </PropertyGroup>
+	<PropertyGroup>
+		<Version>1.0.0</Version>
+		<Authors>Raypro</Authors>
+		<PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-gamerecord-endorphina-session</PackageProjectUrl>
+		<RepositoryUrl>https://gitlab.com/rayprosoft/tgs-gamerecord-endorphina-session.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<RootNamespace>Tgs.GameRecord.Endorphina.Session.Client</RootNamespace>
+		<PackageId>Tgs.GameRecord.Endorphina.Session.Client</PackageId>
+		<Title>Tgs.GameRecord.Endorphina.Session.Client</Title>
+		<Description>Tgs.GameRecord.Endorphina.Session.Client</Description>
+		<PackageTags>Tgs GameRecord Endorphina Session.Client</PackageTags>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="gamerecordendorphinasession.proto" />
-  </ItemGroup>
+
+	<ItemGroup>
+		<None Remove="gamerecordendorphinasession.proto" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.62.0" />
@@ -25,13 +29,13 @@
 		<PackageReference Include="Grpc.Tools" Version="2.63.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>		
+		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Protobuf Include="gamerecordendorphinasession.proto">
-	    <GrpcServices>Client</GrpcServices>
-	  </Protobuf>
+		<Protobuf Include="gamerecordendorphinasession.proto">
+			<GrpcServices>Client</GrpcServices>
+		</Protobuf>
 	</ItemGroup>
 
 </Project>

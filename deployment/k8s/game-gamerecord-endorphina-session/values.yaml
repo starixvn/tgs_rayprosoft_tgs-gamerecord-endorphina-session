@@ -24,9 +24,9 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-podAnnotations: 
+podAnnotations:
   prometheus.io/path: /metrics
-  prometheus.io/port: "52325"
+  prometheus.io/port: "8889"
   prometheus.io/scrape: "true"
 
 podSecurityContext: {}
@@ -43,14 +43,14 @@ securityContext: {}
 service:
   type: ClusterIP
   port: 80
-
-servicegrpc:
-  type: ClusterIP
-  port: 9090
+  targetPort: 8080
+  grpc:
+    port: 9090
+    targetPort: 9090
 
 ingress:
   enabled: false
-  className: "nginx"
+  className: ""
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -87,4 +87,13 @@ nodeSelector: {}
 
 tolerations: []
 
-affinity: {}
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+        - key: app
+          operator: In
+          values:
+          - game-gamerecord-endorphina-session
+      topologyKey: kubernetes.io/hostname

@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
 
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="JunitXml.TestLogger" Version="3.1.12" />
@@ -24,15 +24,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Tgs.GameRecord.Endorphina.Session.Core\Tgs.GameRecord.Endorphina.Session.Core.csproj" />
+		<ProjectReference Include="..\Tgs.GameRecord.Endorphina.Session.Core\Tgs.GameRecord.Endorphina.Session.Core.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EditorConfigFiles Remove="D:\00.Git\tgs-gamerecord-endorphina-session\Tgs.GameRecord.Endorphina.Session.Core.UnitTest\.editorconfig" />
+		<EditorConfigFiles Remove="D:\00.Git\tgs-gamerecord-endorphina-session\Tgs.GameRecord.Endorphina.Session.Core.UnitTest\.editorconfig" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Include="D:\00.Git\tgs-gamerecord-endorphina-session\Tgs.GameRecord.Endorphina.Session.Core.UnitTest\.editorconfig" />
+		<None Include="D:\00.Git\tgs-gamerecord-endorphina-session\Tgs.GameRecord.Endorphina.Session.Core.UnitTest\.editorconfig" />
 	</ItemGroup>
 
 </Project>
