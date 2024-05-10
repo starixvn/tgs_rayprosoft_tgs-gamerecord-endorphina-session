@@ -44,7 +44,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: tgs-connections
-                  key: mongo-gp-game-records
+                  key: mongo-gp
           volumeMounts:
             - mountPath: /config/appsettings.json
               name: appsettings

@@ -5,13 +5,6 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.Endorphina.Session", "Tgs.GameRecord.Endorphina.Session\Tgs.GameRecord.Endorphina.Session.csproj", "{434B0CA2-8BB5-418F-A5E1-5968950F6A94}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3F8E79AB-768C-459E-9D1E-8F293D82E170}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		CodeMaid.config = CodeMaid.config
-		nuget.config = nuget.config
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.Endorphina.Session.Core", "Tgs.GameRecord.Endorphina.Session.Core\Tgs.GameRecord.Endorphina.Session.Core.csproj", "{5851389E-6EF2-44C8-9FAC-7BB600279A82}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.Endorphina.Session.Repositories", "Tgs.GameRecord.Endorphina.Session.Repositories\Tgs.GameRecord.Endorphina.Session.Repositories.csproj", "{55C821B2-2306-479A-81FE-455A049624CA}"

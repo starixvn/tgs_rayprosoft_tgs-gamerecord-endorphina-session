@@ -1,9 +1,7 @@
 ﻿using System.Net.Mime;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using OpenTelemetry.Exporter;
-using OpenTelemetry.Instrumentation.AspNetCore;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Prometheus;
@@ -11,39 +9,38 @@ using Tgs.GameRecord.Endorphina.Session;
 using Tgs.GameRecord.Endorphina.Session.GrpcServices;
 using Tgs.Interceptors;
 
+var filterInstrumentations = new[] { "html", "ico", "png", "jpg" };
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration
-    .AddJsonFile("/config/appsettings.json", true)
-    .AddEnvironmentVariables();
+	.AddJsonFile("/config/appsettings.json", true)
+	.AddEnvironmentVariables();
 
 builder.Logging
-    .AddOpenTelemetry(options =>
-    {
-        options.IncludeFormattedMessage = true;
-        options.ParseStateValues = true;
-        _ = options.AddFluentdForwardExporter(fluentOptions =>
-        {
-            var nodeIp = builder.Configuration.GetValue<string>("NODE_IP")!;
-            fluentOptions.Host = nodeIp;
-            fluentOptions.Tag = builder.Configuration.GetValue<string>("OTEL_SERVICE_NAME")!;
-            fluentOptions.UseMessagePack();
-        });
-    });
+	.AddOpenTelemetry(options =>
+	{
+		options.IncludeFormattedMessage = true;
+		options.ParseStateValues = true;
+		_ = options.AddFluentdForwardExporter(fluentOptions =>
+		{
+			var nodeIp = builder.Configuration.GetValue<string>("NODE_IP")!;
+			fluentOptions.Host = nodeIp;
+			fluentOptions.Tag = builder.Configuration.GetValue<string>("OTEL_SERVICE_NAME")!;
+			fluentOptions.UseMessagePack();
+		});
+	});
 
 // Add services to the container.
 
 builder.Services
-    .AddRouting(options => options.LowercaseUrls = true)
-    .AddControllers(options =>
-    {
-        options.Filters.Add(new ProducesAttribute(MediaTypeNames.Application.Json));
-        options.Filters.Add(new ConsumesAttribute(MediaTypeNames.Application.Json));
-    })
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });
+	.AddRouting(options => options.LowercaseUrls = true)
+	.AddControllers(options =>
+	{
+		options.Filters.Add(new ProducesAttribute(MediaTypeNames.Application.Json));
+		options.Filters.Add(new ConsumesAttribute(MediaTypeNames.Application.Json));
+	})
+	.AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 // Additional configuration is required to successfully run gRPC on macOS.
 // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
@@ -53,76 +50,67 @@ builder.Services.AddSingleton<DiagnosticsInterceptorOptions>();
 builder.Services.AddSingleton<LoggingInterceptor>();
 builder.Services.AddGrpc(options =>
 {
-    options.Interceptors.Add<LoggingInterceptor>();
-    // If true, detailed exception messages are returned to clients when an exception is thrown in a service method.
-    // The default is false. Setting EnableDetailedErrors to true can leak sensitive information.
-    options.EnableDetailedErrors = true;
+	options.Interceptors.Add<LoggingInterceptor>();
+	// If true, detailed exception messages are returned to clients when an exception is thrown in a service method.
+	// The default is false. Setting EnableDetailedErrors to true can leak sensitive information.
+	options.EnableDetailedErrors = true;
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    var xmlFileNames = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.xml");
-    foreach (var xmlFileName in xmlFileNames)
-    {
-        c.IncludeXmlComments(xmlFileName);
-    }
+	foreach (var xmlFileName in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.xml"))
+	{
+		c.IncludeXmlComments(xmlFileName);
+	}
 });
 
 builder.Services.AddGameRecordEndorphinaSession(
-    (options, sp) =>
-    {
-        var configuration = sp.GetRequiredService<IConfiguration>();
-        options.ConnectionString = configuration.GetConnectionString("Mongo")!;
-    });
+	(options, sp) =>
+	{
+		var configuration = sp.GetRequiredService<IConfiguration>();
+		options.ConnectionString = configuration.GetConnectionString("Mongo")!;
+	});
 
 builder.Services
-    .AddSingleton<IConfigureOptions<OtlpExporterOptions>>(
-        sp => new ConfigureNamedOptions<OtlpExporterOptions>(
-            Options.DefaultName,
-            exporterOptions =>
-            {
-                var config = sp.GetRequiredService<IConfiguration>();
-                var nodeIp = config.GetValue<string>("NODE_IP");
-
-                if (!string.IsNullOrWhiteSpace(nodeIp))
-                    exporterOptions.Endpoint = new Uri($"http://{nodeIp}:4317");
-
-                config.GetSection("Opentelemetry:Tracing").Bind(exporterOptions);
-            }))
-    .AddOpenTelemetryTracing(traceBuilder => traceBuilder
-        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddEnvironmentVariableDetector())
-        .AddSource("Tgs.*")
-        .AddSource("TGS.*")
-        .AddAspNetCoreInstrumentation()
-        .AddGrpcClientInstrumentation()
-        .AddGrpcCoreInstrumentation()
-        .AddHttpClientInstrumentation()
-        .AddProfileViewExporter()
-        .AddOtlpExporter())
-    .AddProfileViewer()
-    .Configure<AspNetCoreInstrumentationOptions>(options =>
-    {
-        options.Filter = httpContext =>
-        {
-            return !httpContext.Request.Path.HasValue
-                   || !httpContext.Request.Path.StartsWithSegments("/swagger")
-                   && !httpContext.Request.Path.StartsWithSegments("/healthz")
-                   && !httpContext.Request.Path.StartsWithSegments("/profiler/")
-                   && !httpContext.Request.Path.StartsWithSegments("/metrics")
-                   && !new[] { "html", "ico", "png", "jpg" }.Any(
-                       ext => httpContext.Request.Path.Value.EndsWith($".{ext}"));
-        };
-    });
+	.AddOpenTelemetry()
+	.WithTracing(builder => builder
+		.SetResourceBuilder(ResourceBuilder.CreateDefault()
+			.AddEnvironmentVariableDetector())
+		.AddSource("Tgs.*")
+		.AddSource("TGS.*")
+		.AddSource("Valhalla.*")
+		.AddAspNetCoreInstrumentation(options => options.Filter =
+			httpContext => !httpContext.Request.Path.HasValue
+			|| !httpContext.Request.Path.StartsWithSegments("/swagger")
+			&& !httpContext.Request.Path.StartsWithSegments("/healthz")
+			&& !httpContext.Request.Path.StartsWithSegments("/profiler/")
+			&& !httpContext.Request.Path.StartsWithSegments("/hangfire")
+			&& !httpContext.Request.Path.StartsWithSegments("/metrics")
+			&& !filterInstrumentations.Any(ext => httpContext.Request.Path.Value.EndsWith($".{ext}")))
+		.AddHttpClientInstrumentation()
+		.AddGrpcClientInstrumentation()
+		.AddGrpcCoreInstrumentation()
+		.AddEntityFrameworkCoreInstrumentation(options => options.SetDbStatementForText = true)
+		.AddOtlpExporter())
+	.WithMetrics(meterBuiler => meterBuiler
+	.SetResourceBuilder(ResourceBuilder.CreateDefault()
+		.AddEnvironmentVariableDetector())
+		.AddRuntimeInstrumentation()
+		.AddAspNetCoreInstrumentation()
+		.AddOtlpExporter())
+	.Services
+	.AddInterceptionService()
+	.AddServiceUtiltiyInterceptors();
 
 builder.Services
-    .AddInterceptionService()
-    .AddServiceUtiltiyInterceptors();
+	.AddInterceptionService()
+	.AddServiceUtiltiyInterceptors();
 
 builder.Services
-    .AddHealthChecks()
-    .ForwardToPrometheus();
+	.AddHealthChecks()
+	.ForwardToPrometheus();
 
 var app = builder.Build();
 

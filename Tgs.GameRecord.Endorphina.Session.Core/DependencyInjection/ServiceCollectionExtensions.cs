@@ -4,9 +4,9 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddGameRecordEndorphinaSessionCore(
-        this IServiceCollection services)
-        => services
-            .RegisterAllServiceUtilityTypes(
-                Assembly.GetExecutingAssembly(), ServiceLifetime.Transient);
+	public static IServiceCollection AddGameRecordEndorphinaSessionCore(
+		this IServiceCollection services)
+		=> services
+			.RegisterAllServiceUtilityTypes(
+				Assembly.GetExecutingAssembly(), ServiceLifetime.Transient);
 }

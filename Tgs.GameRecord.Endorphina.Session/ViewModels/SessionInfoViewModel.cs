@@ -3,9 +3,9 @@
 namespace Tgs.GameRecord.Endorphina.Session.ViewModels;
 
 public record SessionInfoViewModel(
-    string Token,
-    TokenState State,
-    string BrandCode,
-    string PlayerCode,
-    int Retry,
-    string MerchantId);
+	string Token,
+	TokenState State,
+	string BrandCode,
+	string PlayerCode,
+	int Retry,
+	string MerchantId);

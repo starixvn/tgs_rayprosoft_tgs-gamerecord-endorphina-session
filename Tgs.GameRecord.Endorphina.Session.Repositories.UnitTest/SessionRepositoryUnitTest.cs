@@ -7,190 +7,176 @@ namespace Tgs.GameRecord.Endorphina.Session.Repositories.UnitTest;
 
 public class SessionRepositoryUnitTest
 {
-    [Fact]
-    public async Task Add()
-    {
-        var fakerMongoDatabase = Substitute.For<IMongoDatabase>();
+	[Fact]
+	public async Task Add()
+	{
+		var fakerMongoDatabase = Substitute.For<IMongoDatabase>();
 
-        var repository = new SessionRepository(fakerMongoDatabase);
+		var repository = new SessionRepository(fakerMongoDatabase);
 
-        var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
-        var brandCode = "GPI";
-        var playerCode = "4ucmqplxb029";
-        var merchantId = "1494";
+		var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
+		var brandCode = "GPI";
+		var playerCode = "4ucmqplxb029";
+		var merchantId = "1494";
 
-        await repository
-            .AddAsync(token, brandCode, playerCode, merchantId)
-            .ConfigureAwait(false);        
+		await repository.AddAsync(token, brandCode, playerCode, merchantId);
 
-        var session = new SessionModel()
-        {
-            Id = token,
-            BrandCode = brandCode,
-            PlayerCode = playerCode,
-            State = TokenState.Queued,
-            Retry = 0
-        };
+		var session = new SessionModel()
+		{
+			Id = token,
+			BrandCode = brandCode,
+			PlayerCode = playerCode,
+			State = TokenState.Queued,
+			Retry = 0
+		};
 
-        _ = fakerMongoDatabase.Received(1)
-            .GetCollection<SessionModel>("Endorphina_sessions")
-            .InsertOneAsync(
-                document: Arg.Is(session))
-            .ConfigureAwait(false);
-    }
+		_ = fakerMongoDatabase
+			.Received(1)
+			.GetCollection<SessionModel>("Endorphina_sessions")
+			.InsertOneAsync(
+				document: Arg.Is(session));
+	}
 
-    [Fact]
-    public async Task Query()
-    {
-        var fakerMongoDatabase = Substitute.For<IMongoDatabase>();
+	[Fact]
+	public async Task Query()
+	{
+		var fakerMongoDatabase = Substitute.For<IMongoDatabase>();
 
-        var repository = new SessionRepository(fakerMongoDatabase);
+		var repository = new SessionRepository(fakerMongoDatabase);
 
-        var state = TokenState.Queued;
-        var merchantId = "1494";
-        var builder = Builders<SessionModel>.Filter;
-        var filter = builder.Eq(x => x.State, state)
-            & builder.Eq(x => x.MerchantId, merchantId);
+		var state = TokenState.Queued;
+		var merchantId = "1494";
+		var builder = Builders<SessionModel>.Filter;
+		var filter = builder.Eq(x => x.State, state)
+			& builder.Eq(x => x.MerchantId, merchantId);
 
-        var actual = await repository
-            .QueryAsync(state, merchantId)
-            .ToArrayAsync()
-            .ConfigureAwait(false);
+		var actual = await repository
+			.QueryAsync(state, merchantId)
+			.ToArrayAsync();
 
-        _ = fakerMongoDatabase.Received(1)
-            .GetCollection<SessionModel>("Endorphina_sessions")
-            .FindAsync(
-                filter: filter)
-            .ConfigureAwait(false);
+		_ = fakerMongoDatabase
+			.Received(1)
+			.GetCollection<SessionModel>("Endorphina_sessions")
+			.FindAsync(filter: filter);
 
-        Assert.NotNull(actual);
-    }
+		Assert.NotNull(actual);
+	}
 
-    [Fact]
-    public async Task UpdateProcessing()
-    {
-        var fakerMongoDatabase = Substitute.For<IMongoDatabase>();
+	[Fact]
+	public async Task UpdateProcessing()
+	{
+		var fakerMongoDatabase = Substitute.For<IMongoDatabase>();
 
-        var repository = new SessionRepository(fakerMongoDatabase);
+		var repository = new SessionRepository(fakerMongoDatabase);
 
-        var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
+		var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
 
-        await repository
-            .UpdateCompleteAsync(token)
-            .ConfigureAwait(false);
+		await repository.UpdateCompleteAsync(token);
 
-        var builder = Builders<SessionModel>.Filter;
-        var filter = builder.Eq(x => x.Id, token);
-        var update = Builders<SessionModel>.Update
-            .Set(s => s.State, TokenState.Processing);
+		var builder = Builders<SessionModel>.Filter;
+		var filter = builder.Eq(x => x.Id, token);
+		var update = Builders<SessionModel>.Update
+			.Set(s => s.State, TokenState.Processing);
 
-        _ = fakerMongoDatabase.Received(1)
-            .GetCollection<SessionModel>("Endorphina_sessions")
-            .UpdateOneAsync(
-                filter: Arg.Is(filter),
-                update: Arg.Is(update))
-            .ConfigureAwait(false);
-    }
+		_ = fakerMongoDatabase
+			.Received(1)
+			.GetCollection<SessionModel>("Endorphina_sessions")
+			.UpdateOneAsync(
+				filter: Arg.Is(filter),
+				update: Arg.Is(update));
+	}
 
-    [Fact]
-    public async Task UpdateRetry()
-    {
-        var fakerMongoDatabase = Substitute.For<IMongoDatabase>();
+	[Fact]
+	public async Task UpdateRetry()
+	{
+		var fakerMongoDatabase = Substitute.For<IMongoDatabase>();
 
-        var repository = new SessionRepository(fakerMongoDatabase);
+		var repository = new SessionRepository(fakerMongoDatabase);
 
-        var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
+		var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
 
-        await repository
-            .UpdateRetryAsync(token)
-            .ConfigureAwait(false);
+		await repository.UpdateRetryAsync(token);
 
-        var builder = Builders<SessionModel>.Filter;
-        var filter = builder.Eq(x => x.Id, token);
-        var update = Builders<SessionModel>.Update
-            .Inc(s => s.Retry, 1)
-            .Set(s => s.State, TokenState.Queued);
+		var builder = Builders<SessionModel>.Filter;
+		var filter = builder.Eq(x => x.Id, token);
+		var update = Builders<SessionModel>.Update
+			.Inc(s => s.Retry, 1)
+			.Set(s => s.State, TokenState.Queued);
 
-        _ = fakerMongoDatabase.Received(1)
-            .GetCollection<SessionModel>("Endorphina_sessions")
-            .UpdateOneAsync(
-                filter: Arg.Is(filter),
-                update: Arg.Is(update))
-            .ConfigureAwait(false);
-    }
+		_ = fakerMongoDatabase
+			.Received(1)
+			.GetCollection<SessionModel>("Endorphina_sessions")
+			.UpdateOneAsync(
+				filter: Arg.Is(filter),
+				update: Arg.Is(update));
+	}
 
-    [Fact]
-    public async Task UpdateComplete()
-    {
-        var fakerMongoDatabase = Substitute.For<IMongoDatabase>();
+	[Fact]
+	public async Task UpdateComplete()
+	{
+		var fakerMongoDatabase = Substitute.For<IMongoDatabase>();
 
-        var repository = new SessionRepository(fakerMongoDatabase);
+		var repository = new SessionRepository(fakerMongoDatabase);
 
-        var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
+		var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
 
-        await repository
-            .UpdateCompleteAsync(token)
-            .ConfigureAwait(false);
+		await repository.UpdateCompleteAsync(token);
 
-        var builder = Builders<SessionModel>.Filter;
-        var filter = builder.Eq(x => x.Id, token);
-        var update = Builders<SessionModel>.Update
-            .Set(s => s.State, TokenState.Complete);
+		var builder = Builders<SessionModel>.Filter;
+		var filter = builder.Eq(x => x.Id, token);
+		var update = Builders<SessionModel>.Update
+			.Set(s => s.State, TokenState.Complete);
 
-        _ = fakerMongoDatabase.Received(1)
-            .GetCollection<SessionModel>("Endorphina_sessions")
-            .UpdateOneAsync(
-                filter: Arg.Is(filter),
-                update: Arg.Is(update))
-            .ConfigureAwait(false);
-    }
+		_ = fakerMongoDatabase
+			.Received(1)
+			.GetCollection<SessionModel>("Endorphina_sessions")
+			.UpdateOneAsync(
+				filter: Arg.Is(filter),
+				update: Arg.Is(update));
+	}
 
-    [Fact]
-    public async Task UpdateFailed()
-    {
-        var fakerMongoDatabase = Substitute.For<IMongoDatabase>();
+	[Fact]
+	public async Task UpdateFailed()
+	{
+		var fakerMongoDatabase = Substitute.For<IMongoDatabase>();
 
-        var repository = new SessionRepository(fakerMongoDatabase);
+		var repository = new SessionRepository(fakerMongoDatabase);
 
-        var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
+		var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
 
-        await repository
-            .UpdateCompleteAsync(token)
-            .ConfigureAwait(false);
+		await repository.UpdateCompleteAsync(token);
 
-        var builder = Builders<SessionModel>.Filter;
-        var filter = builder.Eq(x => x.Id, token);
-        var update = Builders<SessionModel>.Update
-            .Set(s => s.State, TokenState.Failed);
+		var builder = Builders<SessionModel>.Filter;
+		var filter = builder.Eq(x => x.Id, token);
+		var update = Builders<SessionModel>.Update
+			.Set(s => s.State, TokenState.Failed);
 
-        _ = fakerMongoDatabase.Received(1)
-            .GetCollection<SessionModel>("Endorphina_sessions")
-            .UpdateOneAsync(
-                filter: Arg.Is(filter),
-                update: Arg.Is(update))
-            .ConfigureAwait(false);
-    }
+		_ = fakerMongoDatabase
+			.Received(1)
+			.GetCollection<SessionModel>("Endorphina_sessions")
+			.UpdateOneAsync(
+				filter: Arg.Is(filter),
+				update: Arg.Is(update));
+	}
 
-    [Fact]
-    public async Task Delete()
-    {
-        var fakerMongoDatabase = Substitute.For<IMongoDatabase>();
+	[Fact]
+	public async Task Delete()
+	{
+		var fakerMongoDatabase = Substitute.For<IMongoDatabase>();
 
-        var repository = new SessionRepository(fakerMongoDatabase);
+		var repository = new SessionRepository(fakerMongoDatabase);
 
-        var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
+		var token = "AA8BB60F5A134264BE838CF6EBA7C8F1";
 
-        await repository
-            .DeleteAsync(token)
-            .ConfigureAwait(false);
+		await repository.DeleteAsync(token);
 
-        var builder = Builders<SessionModel>.Filter;
-        var filter = builder.Eq(x => x.Id, token);
+		var builder = Builders<SessionModel>.Filter;
+		var filter = builder.Eq(x => x.Id, token);
 
-        _ = fakerMongoDatabase.Received(1)
-            .GetCollection<SessionModel>("Endorphina_sessions")
-            .DeleteOneAsync(
-                filter: Arg.Is(filter))
-            .ConfigureAwait(false);
-    }
+		_ = fakerMongoDatabase
+			.Received(1)
+			.GetCollection<SessionModel>("Endorphina_sessions")
+			.DeleteOneAsync(
+				filter: Arg.Is(filter));
+	}
 }
