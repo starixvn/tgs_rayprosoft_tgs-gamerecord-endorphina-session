@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Tgs.GameRecord.Endorphina.Session.Repositories.Models;
 
-[Table("failed_sessions")]
+[Table("session_fail_forms")]
 public record FailedSessionModel
 {
 	[BsonId]
