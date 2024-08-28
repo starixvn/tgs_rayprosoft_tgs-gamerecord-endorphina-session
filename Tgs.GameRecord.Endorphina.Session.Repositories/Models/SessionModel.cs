@@ -5,7 +5,7 @@ using Tgs.GameRecord.Endorphina.Session.Core;
 
 namespace Tgs.GameRecord.Endorphina.Session.Repositories.Models;
 
-[Table("sessions")]
+[Table("session_forms")]
 public record SessionModel
 {
 	[BsonId]
