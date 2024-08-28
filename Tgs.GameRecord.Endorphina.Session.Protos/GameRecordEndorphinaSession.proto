@@ -5,7 +5,7 @@ option csharp_namespace = "Tgs.GameRecord.Endorphina.Session.Protos";
 package GameRecordEndorphinaSession;
 
 // The greeting service definition.
-service  GameRecordEndorphinaSession{
+service GameRecordEndorphinaSession{
   // Sends a greeting
   rpc Add (AddRequest) returns (BaseReply);
   rpc Get (GetRequest) returns (Session);

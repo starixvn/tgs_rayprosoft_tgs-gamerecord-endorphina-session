@@ -4,9 +4,9 @@ include:
     file: GitLab/Templates/gitlab-job-templates.yml
 
 variables:
-  ImageName: pgtgs/game-gamerecord-endorphina-session
-  TgsSettingKey: game-gamerecord-endorphina-session
-  HelmTemplateFolderName: game-gamerecord-endorphina-session
+  ImageName: pgtgs/game-gamerecord-endor-session
+  TgsSettingKey: game-gamerecord-endor-session
+  HelmTemplateFolderName: game-gamerecord-endor-session
   BuildCacheKey: Tgs.GameRecord.Endorphina.Session.$CI_PIPELINE_IID
 
 stages:

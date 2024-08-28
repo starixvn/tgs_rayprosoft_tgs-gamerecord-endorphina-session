@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "game-gamerecord-endorphina-session.fullname" . }}
+  name: {{ include "game-gamerecord-endor-session.fullname" . }}
   labels:
-    {{- include "game-gamerecord-endorphina-session.labels" . | nindent 4 }}
+    {{- include "game-gamerecord-endor-session.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "game-gamerecord-endorphina-session.fullname" . }}
+    name: {{ include "game-gamerecord-endor-session.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

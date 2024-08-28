@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: configmap-{{ include "game-gamerecord-endorphina-session.fullname" . }}
+  name: configmap-{{ include "game-gamerecord-endor-session.fullname" . }}
   labels:
-    {{- include "game-gamerecord-endorphina-session.labels" . | nindent 4 }}
+    {{- include "game-gamerecord-endor-session.labels" . | nindent 4 }}
 data:
   appsettings.json: |
     {

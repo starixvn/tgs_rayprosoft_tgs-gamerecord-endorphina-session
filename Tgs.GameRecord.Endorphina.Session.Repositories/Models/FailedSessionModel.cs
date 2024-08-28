@@ -1,8 +1,10 @@
-﻿using MongoDB.Bson;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Tgs.GameRecord.Endorphina.Session.Repositories.Models;
 
+[Table("failed_sessions")]
 public record FailedSessionModel
 {
 	[BsonId]
@@ -21,4 +23,7 @@ public record FailedSessionModel
 	[BsonElement("merchant_id")]
 	[BsonRepresentation(BsonType.String)]
 	public string MerchantId { get; set; } = default!;
+
+	[BsonElement("created_on")]
+	public DateTime CreatedOn { get; set; }
 }

@@ -1,9 +1,11 @@
-﻿using MongoDB.Bson;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Tgs.GameRecord.Endorphina.Session.Core;
 
 namespace Tgs.GameRecord.Endorphina.Session.Repositories.Models;
 
+[Table("sessions")]
 public record SessionModel
 {
 	[BsonId]
@@ -29,4 +31,9 @@ public record SessionModel
 	[BsonElement("merchant_id")]
 	[BsonRepresentation(BsonType.String)]
 	public string MerchantId { get; set; } = default!;
+
+	[BsonElement("created_on")]
+	public DateTime CreatedOn { get; set; }
+	[BsonElement("update_on")]
+	public DateTime UpdateOn { get; set; }
 }

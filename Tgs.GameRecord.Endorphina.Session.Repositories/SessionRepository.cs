@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using MongoDB.Driver;
 using Tgs.GameRecord.Endorphina.Session.Core;
+using Tgs.GameRecord.Endorphina.Session.Repositories.Extensions;
 using Tgs.GameRecord.Endorphina.Session.Repositories.Models;
 
 namespace Tgs.GameRecord.Endorphina.Session.Repositories;
@@ -17,7 +18,7 @@ internal class SessionRepository : ISessionRepository
 
 	public async ValueTask InitDBAsync(CancellationToken cancellationToken = default)
 	{
-		var sessionCollection = GetSessionCollection();
+		var sessionCollection = GetCollection();
 
 		await State_IndexAsync(sessionCollection, cancellationToken)
 			.ConfigureAwait(false);
@@ -25,7 +26,7 @@ internal class SessionRepository : ISessionRepository
 
 	public async ValueTask AddAsync(string token, string brandCode, string playerCode, string merchantId, CancellationToken cancellationToken = default)
 	{
-		var collection = GetSessionCollection();
+		var collection = GetCollection();
 
 		var document = new SessionModel()
 		{
@@ -35,6 +36,9 @@ internal class SessionRepository : ISessionRepository
 			State = TokenState.Queued,
 			MerchantId = merchantId,
 			Retry = 0,
+			CreatedOn = DateTime.UtcNow,
+			UpdateOn = DateTime.UtcNow
+
 		};
 
 		await collection
@@ -49,7 +53,7 @@ internal class SessionRepository : ISessionRepository
 		string merchantId,
 		[EnumeratorCancellation] CancellationToken cancellationToken = default)
 	{
-		var collection = GetSessionCollection();
+		var collection = GetCollection();
 
 		var builder = Builders<SessionModel>.Filter;
 
@@ -82,14 +86,15 @@ internal class SessionRepository : ISessionRepository
 
 	public async ValueTask UpdateProcessingAsync(string token, CancellationToken cancellationToken = default)
 	{
-		var collection = GetSessionCollection();
+		var collection = GetCollection();
 
 		var builder = Builders<SessionModel>.Filter;
 
 		var filter = builder.Eq(x => x.Id, token);
 
 		var update = Builders<SessionModel>.Update
-			.Set(s => s.State, TokenState.Processing);
+			.Set(s => s.State, TokenState.Processing)
+			.Set(s => s.UpdateOn, DateTime.UtcNow);
 
 		_ = await collection
 			.UpdateOneAsync(
@@ -101,7 +106,7 @@ internal class SessionRepository : ISessionRepository
 
 	public async ValueTask UpdateRetryAsync(string token, CancellationToken cancellationToken = default)
 	{
-		var collection = GetSessionCollection();
+		var collection = GetCollection();
 
 		var builder = Builders<SessionModel>.Filter;
 
@@ -109,7 +114,8 @@ internal class SessionRepository : ISessionRepository
 
 		var update = Builders<SessionModel>.Update
 			.Inc(s => s.Retry, 1)
-			.Set(s => s.State, TokenState.Queued);
+			.Set(s => s.State, TokenState.Queued)
+			.Set(s => s.UpdateOn, DateTime.UtcNow);
 
 		var result = await collection
 			.UpdateOneAsync(
@@ -121,14 +127,15 @@ internal class SessionRepository : ISessionRepository
 
 	public async ValueTask UpdateCompleteAsync(string token, CancellationToken cancellationToken = default)
 	{
-		var collection = GetSessionCollection();
+		var collection = GetCollection();
 
 		var builder = Builders<SessionModel>.Filter;
 
 		var filter = builder.Eq(x => x.Id, token);
 
 		var update = Builders<SessionModel>.Update
-			.Set(s => s.State, TokenState.Complete);
+			.Set(s => s.State, TokenState.Complete)
+			.Set(s => s.UpdateOn, DateTime.UtcNow);
 
 		_ = await collection
 			.UpdateOneAsync(
@@ -140,14 +147,15 @@ internal class SessionRepository : ISessionRepository
 
 	public async ValueTask UpdateFailedAsync(string token, CancellationToken cancellationToken = default)
 	{
-		var collection = GetSessionCollection();
+		var collection = GetCollection();
 
 		var builder = Builders<SessionModel>.Filter;
 
 		var filter = builder.Eq(x => x.Id, token);
 
 		var update = Builders<SessionModel>.Update
-			.Set(s => s.State, TokenState.Failed);
+			.Set(s => s.State, TokenState.Failed)
+			.Set(s => s.UpdateOn, DateTime.UtcNow);
 
 		_ = await collection
 			.UpdateOneAsync(
@@ -159,7 +167,7 @@ internal class SessionRepository : ISessionRepository
 
 	public async ValueTask DeleteAsync(string token, CancellationToken cancellationToken = default)
 	{
-		var collection = GetSessionCollection();
+		var collection = GetCollection();
 
 		var builder = Builders<SessionModel>.Filter;
 
@@ -174,7 +182,7 @@ internal class SessionRepository : ISessionRepository
 
 	public async ValueTask<Core.Models.Session?> GetAsync(string token, CancellationToken cancellationToken = default)
 	{
-		var collection = GetSessionCollection();
+		var collection = GetCollection();
 
 		var builder = Builders<SessionModel>.Filter;
 
@@ -217,6 +225,6 @@ internal class SessionRepository : ISessionRepository
 			cancellationToken: cancellationToken);
 	}
 
-	private IMongoCollection<SessionModel> GetSessionCollection()
-		=> _database.GetCollection<SessionModel>("Endorphina_sessions");
+	private IMongoCollection<SessionModel> GetCollection()
+		=> _database.GetCollection<SessionModel>(typeof(SessionModel).GetTableName());
 }

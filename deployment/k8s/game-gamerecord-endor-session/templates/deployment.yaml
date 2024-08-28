@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "game-gamerecord-endorphina-session.fullname" . }}
+  name: {{ include "game-gamerecord-endor-session.fullname" . }}
   labels:
-    {{- include "game-gamerecord-endorphina-session.labels" . | nindent 4 }}
+    {{- include "game-gamerecord-endor-session.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "game-gamerecord-endorphina-session.selectorLabels" . | nindent 6 }}
+      {{- include "game-gamerecord-endor-session.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "game-gamerecord-endorphina-session.selectorLabels" . | nindent 8 }}
+        {{- include "game-gamerecord-endor-session.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "game-gamerecord-endorphina-session.serviceAccountName" . }}
+      serviceAccountName: {{ include "game-gamerecord-endor-session.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -35,7 +35,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: OTEL_SERVICE_NAME
-              value: GameRecord-Endorphina-Session({{ .Release.Namespace }})
+              value: GameRecord-Endor-Session({{ .Release.Namespace }})
             - name: NODE_IP
               valueFrom:
                 fieldRef:
@@ -116,7 +116,7 @@ spec:
       volumes:
         - name: appsettings
           configMap:
-            name: configmap-{{ include "game-gamerecord-endorphina-session.fullname" . }}
+            name: configmap-{{ include "game-gamerecord-endor-session.fullname" . }}
         - name: rds-combined-ca-bundle
           secret:
             secretName: rds-combined-ca-bundle

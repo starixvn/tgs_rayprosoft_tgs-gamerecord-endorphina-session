@@ -1,19 +1,19 @@
-# Default values for game-gamerecord-endorphina-session.
+# Default values for game-gamerecord-endor-session.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: pgtgs/game-gamerecord-endorphina-session
+  repository: pgtgs/game-gamerecord-endor-session
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 
 imagePullSecrets:
   - name: dockerhub
-nameOverride: "game-gamerecord-endorphina-session"
-fullnameOverride: "game-gamerecord-endorphina-session"
+nameOverride: "game-gamerecord-endor-session"
+fullnameOverride: "game-gamerecord-endor-session"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -103,5 +103,5 @@ affinity:
         - key: app
           operator: In
           values:
-          - game-gamerecord-endorphina-session
+          - game-gamerecord-endor-session
       topologyKey: kubernetes.io/hostname
