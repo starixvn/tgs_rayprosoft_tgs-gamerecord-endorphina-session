@@ -32,7 +32,7 @@ public class SessionRepositoryUnitTest
 
 		_ = fakerMongoDatabase
 			.Received(1)
-			.GetCollection<SessionModel>("Endorphina_sessions")
+			.GetCollection<SessionModel>("sessions")
 			.InsertOneAsync(
 				document: Arg.Is(session));
 	}
@@ -56,7 +56,7 @@ public class SessionRepositoryUnitTest
 
 		_ = fakerMongoDatabase
 			.Received(1)
-			.GetCollection<SessionModel>("Endorphina_sessions")
+			.GetCollection<SessionModel>("sessions")
 			.FindAsync(filter: filter);
 
 		Assert.NotNull(actual);
@@ -80,7 +80,7 @@ public class SessionRepositoryUnitTest
 
 		_ = fakerMongoDatabase
 			.Received(1)
-			.GetCollection<SessionModel>("Endorphina_sessions")
+			.GetCollection<SessionModel>("sessions")
 			.UpdateOneAsync(
 				filter: Arg.Is(filter),
 				update: Arg.Is(update));
@@ -105,7 +105,7 @@ public class SessionRepositoryUnitTest
 
 		_ = fakerMongoDatabase
 			.Received(1)
-			.GetCollection<SessionModel>("Endorphina_sessions")
+			.GetCollection<SessionModel>("sessions")
 			.UpdateOneAsync(
 				filter: Arg.Is(filter),
 				update: Arg.Is(update));
@@ -129,7 +129,7 @@ public class SessionRepositoryUnitTest
 
 		_ = fakerMongoDatabase
 			.Received(1)
-			.GetCollection<SessionModel>("Endorphina_sessions")
+			.GetCollection<SessionModel>("sessions")
 			.UpdateOneAsync(
 				filter: Arg.Is(filter),
 				update: Arg.Is(update));
@@ -153,7 +153,7 @@ public class SessionRepositoryUnitTest
 
 		_ = fakerMongoDatabase
 			.Received(1)
-			.GetCollection<SessionModel>("Endorphina_sessions")
+			.GetCollection<SessionModel>("sessions")
 			.UpdateOneAsync(
 				filter: Arg.Is(filter),
 				update: Arg.Is(update));
@@ -175,7 +175,7 @@ public class SessionRepositoryUnitTest
 
 		_ = fakerMongoDatabase
 			.Received(1)
-			.GetCollection<SessionModel>("Endorphina_sessions")
+			.GetCollection<SessionModel>("sessions")
 			.DeleteOneAsync(
 				filter: Arg.Is(filter));
 	}

@@ -30,7 +30,7 @@ public class FailedSessionRepositoryUnitTest
 
 		_ = fakerMongoDatabase
 			.Received(1)
-			.GetCollection<FailedSessionModel>("Endorphina_Failed_sessions")
+			.GetCollection<FailedSessionModel>("failed_sessions")
 			.InsertOneAsync(
 				document: Arg.Is(failedSession));
 	}
@@ -52,7 +52,7 @@ public class FailedSessionRepositoryUnitTest
 
 		_ = fakerMongoDatabase
 			.Received(1)
-			.GetCollection<FailedSessionModel>("Endorphina_Failed_sessions")
+			.GetCollection<FailedSessionModel>("failed_sessions")
 			.FindAsync(
 				filter: filter);
 
