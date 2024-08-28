@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>1.0.0</Version>
+		<Version>1.0.1</Version>
 		<Authors>Raypro</Authors>
 		<PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-gamerecord-endorphina-session</PackageProjectUrl>
 		<RepositoryUrl>https://gitlab.com/rayprosoft/tgs-gamerecord-endorphina-session.git</RepositoryUrl>
@@ -18,24 +18,20 @@
 		<PackageTags>Tgs GameRecord Endorphina Session.Client</PackageTags>
 	</PropertyGroup>
 
-
 	<ItemGroup>
-		<None Remove="gamerecordendorphinasession.proto" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.63.0" />
-		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.63.0" />
-		<PackageReference Include="Grpc.Tools" Version="2.65.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		<PackageReference Include="Grpc.AspNetCore" Version="2.65.0" />
+		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.65.0" />
+		<PackageReference Include="PhoenixToolkits.NuGet.BuildTools" Version="0.0.3">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="PhoenixToolkits.Protobuf.ExtendTypes" Version="0.0.7" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="gamerecordendorphinasession.proto">
-			<GrpcServices>Client</GrpcServices>
-		</Protobuf>
+	  <ProjectReference Include="..\Tgs.GameRecord.Endorphina.Session.Protos\Tgs.GameRecord.Endorphina.Session.Protos.csproj">
+	    <PrivateAssets>all</PrivateAssets>
+	  </ProjectReference>
 	</ItemGroup>
 
 </Project>

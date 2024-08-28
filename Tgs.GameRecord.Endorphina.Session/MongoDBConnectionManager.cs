@@ -17,6 +17,6 @@ internal class MongoDBConnectionManager
 
 		var mongoUrl = new MongoUrl(options.ConnectionString);
 		var _mongoClient = new MongoClient(mongoUrl);
-		Database = _mongoClient.GetDatabase("game-records");
+		Database = _mongoClient.GetDatabase("game_provider_endor_master");
 	}
 }

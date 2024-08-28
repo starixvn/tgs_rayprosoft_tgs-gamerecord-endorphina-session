@@ -2,23 +2,18 @@
 using MongoDB.Driver;
 using Tgs.GameRecord.Endorphina.Session.Core;
 using Tgs.GameRecord.Endorphina.Session.Core.Models;
+using Tgs.GameRecord.Endorphina.Session.Repositories.Extensions;
 using Tgs.GameRecord.Endorphina.Session.Repositories.Models;
 
 namespace Tgs.GameRecord.Endorphina.Session.Repositories;
 
-internal class FailedSessionRepository : IFailedSessionRepository
+internal class FailedSessionRepository(
+	IMongoDatabase database) : IFailedSessionRepository
 {
-	private readonly IMongoDatabase _database;
-
-	public FailedSessionRepository(
-		IMongoDatabase database)
-	{
-		_database = database ?? throw new ArgumentNullException(nameof(database));
-	}
-
 	public async ValueTask InitDBAsync(CancellationToken cancellationToken = default)
 	{
-		var failedSessionCollection = GetFailedSessionColletion();
+		var failedSessionCollection = GetCollection();
+
 
 		await MerchantId_IndexAsync(failedSessionCollection, cancellationToken)
 			.ConfigureAwait(false);
@@ -32,7 +27,7 @@ internal class FailedSessionRepository : IFailedSessionRepository
 
 	public async ValueTask AddFailedAsync(string token, string brandCode, string playerCode, string merchantId, CancellationToken cancellationToken = default)
 	{
-		var collection = GetFailedSessionColletion();
+		var collection = GetCollection();
 
 		var document = new FailedSessionModel()
 		{
@@ -40,12 +35,12 @@ internal class FailedSessionRepository : IFailedSessionRepository
 			BrandCode = brandCode,
 			PlayerCode = playerCode,
 			MerchantId = merchantId,
+			CreatedOn = DateTime.UtcNow,
 		};
 
-		await collection
-			.InsertOneAsync(
-				document: document,
-				cancellationToken: cancellationToken)
+		await collection.InsertOneAsync(
+			document: document,
+			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 	}
 
@@ -53,7 +48,7 @@ internal class FailedSessionRepository : IFailedSessionRepository
 		string merchantId,
 		[EnumeratorCancellation] CancellationToken cancellationToken = default)
 	{
-		var collection = GetFailedSessionColletion();
+		var collection = GetCollection();
 
 		var builder = Builders<FailedSessionModel>.Filter;
 
@@ -135,6 +130,6 @@ internal class FailedSessionRepository : IFailedSessionRepository
 			cancellationToken: cancellationToken);
 	}
 
-	private IMongoCollection<FailedSessionModel> GetFailedSessionColletion()
-				=> _database.GetCollection<FailedSessionModel>("Endorphina_Failed_sessions");
+	private IMongoCollection<FailedSessionModel> GetCollection()
+		=> database.GetCollection<FailedSessionModel>(typeof(FailedSessionModel).GetTableName());
 }
