@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<Version>1.0.1</Version>
+		<Version>8.0.1</Version>
 		<Authors>Raypro</Authors>
 		<PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-gamerecord-endorphina-session</PackageProjectUrl>
 		<RepositoryUrl>https://gitlab.com/rayprosoft/tgs-gamerecord-endorphina-session.git</RepositoryUrl>
@@ -19,8 +19,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Grpc.AspNetCore" Version="2.65.0" />
-		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.65.0" />
+		<PackageReference Include="Grpc.AspNetCore" Version="2.66.0" />
+		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.66.0" />
 		<PackageReference Include="PhoenixToolkits.NuGet.BuildTools" Version="0.0.3">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
