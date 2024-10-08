@@ -7,11 +7,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MongoDB.Bson" Version="2.28.0" />
-		<PackageReference Include="MongoDB.Driver" Version="2.28.0" />
-		<PackageReference Include="MongoDB.Driver.Core" Version="2.28.0" />
-		<PackageReference Include="Scrutor" Version="4.2.2" />
-		<PackageReference Include="StackExchange.Redis" Version="2.8.0" />
+		<PackageReference Include="MongoDB.Bson" Version="2.29.0" />
+		<PackageReference Include="MongoDB.Driver" Version="2.29.0" />
+		<PackageReference Include="MongoDB.Driver.Core" Version="2.29.0" />
+		<PackageReference Include="Scrutor" Version="5.0.1" />
+		<PackageReference Include="StackExchange.Redis" Version="2.8.16" />
 		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
 		<PackageReference Include="Tgs.MessageQueue" Version="2.3.0" />
 		<PackageReference Include="TGS.ServiceUtility" Version="0.2.0" />
